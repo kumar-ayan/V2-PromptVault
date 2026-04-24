@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 
-const MockEditor = dynamic(() => import('@/components/MockEditor'))
 const Features = dynamic(() => import('@/components/Features'))
 const Footer = dynamic(() => import('@/components/Footer'))
 
@@ -11,7 +10,6 @@ export default async function Home() {
     <main className="container">
       <Navbar />
       <Hero />
-      <MockEditor />
       <Features />
       <Footer />
     </main>

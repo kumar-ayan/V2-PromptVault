@@ -161,6 +161,21 @@ export function usePromptManager() {
     }
   };
 
+  const handleDeletePrompt = (id: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    
+    if (confirm("Are you sure you want to delete this prompt from your history? This action cannot be undone.")) {
+      localHistory.deletePrompt(id);
+      refreshSavedPrompts();
+      if (selectedPromptId === id) {
+        handleCreatePrompt();
+      }
+    }
+  };
+
   return {
     promptText, setPromptText,
     metrics, setMetrics,
@@ -177,6 +192,7 @@ export function usePromptManager() {
     handleSave, handleAnalyze, handleImprove,
     handleMultiModelEval,
     handleExport,
-    handleImport
+    handleImport,
+    handleDeletePrompt
   };
 }

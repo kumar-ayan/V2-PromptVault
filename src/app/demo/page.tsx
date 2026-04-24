@@ -23,7 +23,8 @@ export default function DemoPage() {
     handleSave, handleAnalyze, handleImprove,
     handleMultiModelEval,
     handleExport,
-    handleImport
+    handleImport,
+    handleDeletePrompt
   } = usePromptManager();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -34,7 +35,8 @@ export default function DemoPage() {
 
   // Helper to join class names safely without trailing spaces
   const classNames = (...classes: (string | boolean | undefined)[]) => {
-    return classes.filter(Boolean).join(' ').trim();
+    const result = classes.filter(Boolean).join(' ').trim();
+    return result || undefined;
   };
 
   return (
@@ -261,12 +263,24 @@ export default function DemoPage() {
                  <div
                    key={prompt.id}
                    onClick={() => handleSelectPrompt(prompt)}
-                   style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer'}}
+                   style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', position: 'relative', group: 'true'}}
+                   className={styles.historyItem}
                  >
-                   <h4 style={{margin: 0, color: 'white'}}>{prompt.name}</h4>
-                   <p style={{margin: '0.5rem 0 0 0', color: '#a1a1aa', fontSize: '0.875rem',  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                     {prompt.prompt_versions[0]?.content ?? 'No saved versions yet'}
-                   </p>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                     <div style={{ flex: 1, overflow: 'hidden' }}>
+                       <h4 style={{margin: 0, color: 'white'}}>{prompt.name}</h4>
+                       <p style={{margin: '0.5rem 0 0 0', color: '#a1a1aa', fontSize: '0.875rem',  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                         {prompt.prompt_versions[0]?.content ?? 'No saved versions yet'}
+                       </p>
+                     </div>
+                     <button 
+                       className={styles.deleteBtn}
+                       onClick={(e) => handleDeletePrompt(prompt.id, e)}
+                       title="Delete prompt"
+                     >
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                     </button>
+                   </div>
                  </div>
                 ))}
                 {filteredPrompts.length === 0 && (
@@ -294,9 +308,10 @@ export default function DemoPage() {
                   <div
                     key={prompt.id}
                     onClick={() => handleSelectPrompt(prompt)}
-                    style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer'}}
+                    style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', position: 'relative'}}
+                    className={styles.historyItem}
                   >
-                    <div style={{ overflow: 'hidden' }}>
+                    <div style={{ overflow: 'hidden', flex: 1 }}>
                       <h4 style={{margin: 0, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{prompt.name || "Untitled Prompt"}</h4>
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                         <p style={{margin: 0, color: '#a1a1aa', fontSize: '0.875rem'}}>
@@ -311,15 +326,24 @@ export default function DemoPage() {
                         ))}
                       </div>
                     </div>
-                    {score != null ? (
-                      <div style={{ flexShrink: 0, marginLeft: '1rem', padding: '0.5rem 1rem', background: isGood ? 'rgba(34, 197, 94, 0.1)' : 'rgba(234, 179, 8, 0.1)', color: isGood ? '#4ade80' : '#facc15', borderRadius: '20px', fontWeight: 'bold' }}>
-                        Score: {score}
-                      </div>
-                    ) : (
-                      <div style={{ flexShrink: 0, marginLeft: '1rem', padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.05)', color: '#a1a1aa', borderRadius: '20px', fontSize: '0.875rem' }}>
-                        No Score
-                      </div>
-                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      {score != null ? (
+                        <div style={{ flexShrink: 0, padding: '0.5rem 1rem', background: isGood ? 'rgba(34, 197, 94, 0.1)' : 'rgba(234, 179, 8, 0.1)', color: isGood ? '#4ade80' : '#facc15', borderRadius: '20px', fontWeight: 'bold' }}>
+                          Score: {score}
+                        </div>
+                      ) : (
+                        <div style={{ flexShrink: 0, padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.05)', color: '#a1a1aa', borderRadius: '20px', fontSize: '0.875rem' }}>
+                          No Score
+                        </div>
+                      )}
+                      <button 
+                        className={styles.deleteBtn}
+                        onClick={(e) => handleDeletePrompt(prompt.id, e)}
+                        title="Delete prompt"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </button>
+                    </div>
                   </div>
                 );
               })}

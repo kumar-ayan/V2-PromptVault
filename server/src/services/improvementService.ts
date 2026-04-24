@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import DOMPurify from 'isomorphic-dompurify';
-import { unifiedChatCompletion } from './openaiClient';
+import { unifiedChatCompletion, GEMINI_MODELS } from './openaiClient';
 
 const ImprovedPromptSchema = z.object({
   improved_prompt: z.string().describe('The completely rewritten, optimized prompt text.'),
@@ -40,7 +40,7 @@ export class ImprovementService {
     try {
       const response = await unifiedChatCompletion(
         {
-          model: 'gemini-1.5-pro-latest', // Prioritize Gemini for its large context window and strong reasoning
+          model: GEMINI_MODELS[0], // Always tries the best available Gemini model first, falls back automatically
           messages: [{ role: 'user', content: systemInstruction }],
           response_format: { type: 'json_object' }
         },
