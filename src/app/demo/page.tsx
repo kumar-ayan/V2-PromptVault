@@ -263,7 +263,7 @@ export default function DemoPage() {
                  <div
                    key={prompt.id}
                    onClick={() => handleSelectPrompt(prompt)}
-                   style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', position: 'relative', group: 'true'}}
+                   style={{padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', cursor: 'pointer', position: 'relative'}}
                    className={styles.historyItem}
                  >
                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
